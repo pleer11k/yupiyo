@@ -1,0 +1,116 @@
+body {
+    font-family: 'Arial', sans-serif;
+    color: #f9f9f9;
+}
+
+a {
+    color: #f9f9f9;
+    text-decoration: none;
+}
+
+#algos {
+    transition-duration: 0.25s;
+}
+
+#algos:hover {
+    color: #ffee00;
+}
+
+h1 {
+    font-size: 48px;
+}
+
+ul {
+    list-style: disc;
+    list-style-type: disc;
+}
+
+li {
+    font-size: 26px;
+    padding-left: 10px;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    background-color: #292929c1;
+    border-radius: 15px 15px 15px 15px;
+}
+
+header{
+    display: flex;
+    justify-content: center;
+}
+.algoritmhs{
+    height: 100%;
+}
+
+@media (max-width: 700px) {
+    .main{
+        width: fit-content;
+    }
+}
+
+@media (min-width: 700px) {
+    .main{
+        width: 50%;
+    }
+}
+
+
+
+
+
+.background{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%) rotate(-15deg);
+    z-index: -999;
+    font-size: 0px;
+    white-space: nowrap;
+    background-color: #292929;
+}
+.wrap{
+    white-space: nowrap;
+    display: inline-block;
+    background-size: 85%;
+    background-position: center;
+    background-repeat: repeat-y;
+    width: 150px;
+    height: 1000000px;
+    animation: 1000s linear infinite;
+
+}
+.wrap:nth-child(odd) {
+    animation-name: slideout;
+    /*background-image: url("https://em-content.zobj.net/thumbs/120/apple/354/green-heart_1f49a.png");*/
+    background-image: url("https://em-content.zobj.net/thumbs/72/apple/354/light-blue-heart_1fa75.png");
+}
+.wrap:nth-child(even) {
+    animation-name: slidein;
+    /*background-image: url("https://em-content.zobj.net/thumbs/120/apple/354/purple-heart_1f49c.png");*/
+    background-image: url("https://em-content.zobj.net/thumbs/72/apple/354/blue-heart_1f499.png");
+}
+@keyframes slidein {
+    from {
+        transform: translateY(-60000px);
+    }
+    to {
+        transform: translateY(-30000px);
+    }
+}
+@keyframes slideout {
+    from {
+        transform: translateY(-30000px);
+    }
+    to {
+        transform: translateY(-60000px);
+    }
+}
