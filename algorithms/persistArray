@@ -1,0 +1,92 @@
+персистентный массив (на дереве отрезков)
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+int n;
+vector<int> a;
+
+struct node {
+    int val = 0;
+    int vl = 0, vr = n;
+    node *l = nullptr, *r = nullptr;
+
+    node(int vl, int vr): vl(vl), vr(vr) {}
+    node(int val, int vl, int vr, node *l, node *r): val(val), vl(vl), vr(vr), l(l), r(r) {}
+
+    void build() {
+        if (vr - vl == 1) {
+            val = a[vl];
+            return;
+        }
+        int vm = (vl + vr) / 2;
+        l = new node(vl, vm);
+        r = new node(vm, vr);
+        l->build();
+        r->build();
+        val = l->val + r->val;
+    }
+
+    int get(int p) {
+        if (vr - vl == 1) {
+            return val;
+        }
+        int vm = (vl + vr) / 2;
+        if (p < vm) return l->get(p);
+        else return r->get(p);
+    }
+
+    void update(int p, int x) {
+        if (vr - vl == 1) {
+            val = x;
+            return;
+        }
+        int vm = (vl + vr) / 2;
+        if (p < vm) {
+            l = new node(l->val, l->vl, l->vr, l->l, l->r);
+            l->update(p, x);
+        } else {
+            r = new node(r->val, r->vl, r->vr, r->l, r->r);
+            r->update(p, x);
+        }
+        val = l->val + r->val;
+    }
+};
+
+int main() {
+    cin >> n;
+    a.resize(n);
+    for (auto &el : a) cin >> el;
+
+    vector<node *> forest = {new node(0, 0, n, nullptr, nullptr)};
+    forest[0]->build();
+
+    int q; cin >> q;
+    while (q --> 0) {
+        cout << "versions amount: " << forest.size() << endl;
+        string op;
+        cin >> op;
+        if (op == "update") {
+            // номер версии к которой применить изменение | позиция | новое значение
+            int v, p, x;
+            cin >> v >> p >> x;
+            node *parent = forest[--v];
+            node *new_plant = new node(parent->val, parent->vl, parent->vr, parent->l, parent->r);
+            new_plant->update(--p, x);
+            forest.push_back(new_plant);
+            cout << "succesfully created new version of array" << endl;
+        } else if (op == "print") {
+            // номер версии которую надо вывести
+            int v; cin >> v;
+            node *plant = forest[v - 1];
+            cout << "array #" << v << " = ";
+            for (int i = 0; i < n; i++) {
+                cout << plant->get(i) << " ";
+            }
+            cout << endl;
+        }
+    }
+}
