@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="media/icons/favicon.ico" type="image/x-icon">
+    <title>yupiyo</title>
+
+    <style>
+        .block {
+            display: block;
+        }
+
+        .ver {
+            display: inline-block;
+            width: 3vw;
+            height: 2vw;
+            text-align: center;
+            vertical-align: middle;
+            padding-top: auto;
+            padding-bottom: auto;
+            margin: 5px;
+        }
+        .handle {
+            display: inline-block;
+            width: 10vw;
+            height: 2vw;
+        }
+
+        #ac {
+            background-color: greenyellow;
+        }
+
+        #no {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    {%for key, val in users.items%}
+    <div class="block">
+        <div class="handle">{{key}}</div>
+        {%for el in val%}
+            {%if el == 1%}
+                <div class="ver" id="ac"></div>
+            {%else%}
+                <div class="ver" id="no"></div>
+            {%endif%}
+        {%endfor%}
+    </div>
+        
+    {%endfor%}
+    <!-- <div class="block">
+        <div class="ver" id="ac">+</div>
+        <div class="ver" id="no">-</div>
+    </div>
+    <div class="block">
+    </div> -->
+</body>
+</html>
