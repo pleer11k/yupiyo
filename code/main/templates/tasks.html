@@ -10,49 +10,138 @@
     <title>yupiyo</title>
 
     <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
         .block {
             display: block;
         }
 
         .ver {
             display: inline-block;
-            width: 3vw;
-            height: 2vw;
+            min-width: 3vw;
+            min-height: 2vw;
             text-align: center;
-            vertical-align: middle;
             padding-top: auto;
             padding-bottom: auto;
+            vertical-align: middle;
             margin: 5px;
         }
         .handle {
             display: inline-block;
-            width: 10vw;
-            height: 2vw;
+            min-width: 10vw;
+            min-height: 2vw;
         }
 
         #ac {
             background-color: greenyellow;
+            /* min-width: fit-content; */
         }
 
         #no {
             background-color: red;
+            /* min-width: fit-content; */
+        }
+
+        details, summary {
+            vertical-align: middle;
+            /* margin-left: 50%;
+            margin-right: 50%; */
+            list-style: none;
+        }
+
+        details[open] {
+            min-width: 100px;
+        }
+
+        td {
+            min-width: 15px;
+            padding: 10px;
+            justify-content: center;
+            align-items: center;
+            padding-left: 1.5vw;
+            padding-right: 1.5vw;
+            background-color: aliceblue;
+        }
+        p {
+            margin: 2px;
+        }
+        h1 {
+            margin-left: 3vw;
+        }
+        table {
+            width: fit-content;
+        }
+
+        form {
+            margin-top: 15px;
+        }
+        #stat {
+            min-width: 200px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            color: white;
+            background-color: black;
+            border-radius: 5px;
+            transition: .3s;
+            border: none;
+        }
+        button:hover {
+            color: black;
+            background-color: aliceblue;
+            transition: .3s;
         }
     </style>
 </head>
 <body>
-    {%for key, val in users.items%}
-    <div class="block">
-        <div class="handle">{{key}}</div>
-        {%for el in val%}
-            {%if el == 1%}
-                <div class="ver" id="ac"></div>
+    <a href="/">Назад</a>
+    <h1>Знакомьтесь с будущими всеросниками</h1>
+    <table>
+    <tbody>
+    {%for val in users%}
+        <tr>
+        <td id="stat">{{val.0}}</td>
+        <td id="stat">Решено: {{val.2}} задач <br> Ср. сложность: {{val.3}}</td>
+        {%for el in val.1%}
+            {%if el.0 == 1%}
+                <td id="ac">
+                    <details>
+                        <summary>+</summary>
+                        <p>{{el.3}}</p>
+                        <a href="{{el.1}}">link</a>
+                        <p>diff: {{el.2}}</p>
+                    </details>
+                </td>
             {%else%}
-                <div class="ver" id="no"></div>
+                <td id="no">
+                    <details>
+                        <summary>—</summary>
+                        <p>{{el.3}}</p>
+                        <a href="{{el.1}}">link</a>
+                        <p>diff: {{el.2}}</p>
+                    </details>
+                </td>
             {%endif%}
         {%endfor%}
-    </div>
+        </tr>
         
     {%endfor%}
+    
+    </tbody>
+    </table>
+
+    <form method="POST">
+        {%csrf_token%}
+        <button type="submit" name="cnt">Сортануть всеросников по количеству задач</button>
+        <button type="submit" name="dif">Сортануть всеросников по средней сложности решенных</button>
+        <button type="submit" name="tdif">Сортануть таски по сложности</button>
+        <button type="submit" name="tcnt">Сортануть таски по количеству решивших</button>
+    </form>
     <!-- <div class="block">
         <div class="ver" id="ac">+</div>
         <div class="ver" id="no">-</div>
