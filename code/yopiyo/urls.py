@@ -17,12 +17,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from main.views import main, test, leaderboard
+from main.views import main, test, leaderboard, jsonleaderboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main),
-    path('test/', test),
+    path('test/', jsonleaderboard),
     path('tasks/', leaderboard)
 ] 
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
