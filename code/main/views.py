@@ -65,7 +65,7 @@ def leaderboard(request):
                         # except Exception:
                         #     pass
 
-        data["users"].append([p.handle, l, s, round(c / s)])
+        data["users"].append([p.handle, l, s, round(c / max(1, s))])
         # print(f"{p.handle}: {l}")
 
     
@@ -140,7 +140,7 @@ def jsonleaderboard(request):
                         # except Exception:
                         #     pass
 
-        data["users"].append([p.handle, l, s, round(c / s)])
+        data["users"].append([p.handle, l, s, round(c / max(1, s))])
         # print(f"{p.handle}: {l}")
 
     
