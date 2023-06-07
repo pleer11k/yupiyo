@@ -39,8 +39,13 @@
             /* min-width: fit-content; */
         }
 
-        #no {
+        #wa {
             background-color: red;
+            /* min-width: fit-content; */
+        }
+
+        #no {
+            background-color: grey;
             /* min-width: fit-content; */
         }
 
@@ -108,10 +113,19 @@
         <td id="stat">{{val.0}}</td>
         <td id="stat">Решено: {{val.2}} задач <br> Ср. сложность: {{val.3}}</td>
         {%for el in val.1%}
-            {%if el.0 == 1%}
+            {%if el.0 == 2%}
                 <td id="ac">
                     <details>
                         <summary>+</summary>
+                        <p>{{el.3}}</p>
+                        <a href="{{el.1}}">link</a>
+                        <p>diff: {{el.2}}</p>
+                    </details>
+                </td>
+            {%elif el.0 == 1%}
+                <td id="wa">
+                    <details>
+                        <summary>—</summary>
                         <p>{{el.3}}</p>
                         <a href="{{el.1}}">link</a>
                         <p>diff: {{el.2}}</p>

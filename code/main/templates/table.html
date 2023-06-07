@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <!--<link rel="stylesheet" href="{% static 'table.css' %}">-->
+    <title>yupiyo</title>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        .block {
+            display: block;
+        }
+
+        .ver {
+            display: inline-block;
+            min-width: 3vw;
+            min-height: 2vw;
+            text-align: center;
+            padding-top: auto;
+            padding-bottom: auto;
+            vertical-align: middle;
+            margin: 5px;
+        }
+        .handle {
+            display: inline-block;
+            min-width: 10vw;
+            min-height: 2vw;
+        }
+
+        #ac {
+            background-color: greenyellow;
+            
+            /* min-width: fit-content; */
+        }
+        
+        #wa {
+            background-color: red;
+            /* min-width: fit-content; */
+        }
+
+        #no {
+            background-color: lightgray;
+            /* min-width: fit-content; */
+        }
+
+        summary {
+            vertical-align: middle;
+            /* margin-left: 50%;
+            margin-right: 50%; */
+            list-style: none;
+        }
+        details{
+            width:4vw;
+            height:4vw;
+            display: flex;
+            align-items: center;
+        }
+
+        details[open] {
+            min-width: 100px;
+        }
+
+        td {
+            min-width: 15px;
+            /*padding: 10px;*/
+            justify-content: center;
+            align-items: center;
+            /*padding-left: 1.5vw;*/
+            /*padding-right: 1.5vw;*/
+            background-color: aliceblue;
+            text-align: center;
+        }
+        p {
+            margin: 2px;
+        }
+        h1 {
+            margin-left: 3vw;
+        }
+        table {
+            width: fit-content;
+        }
+
+        form {
+            margin-top: 15px;
+        }
+        #stat {
+            min-width: 200px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            color: white;
+            background-color: black;
+            border-radius: 5px;
+            transition: .3s;
+            border: none;
+        }
+        button:hover {
+            color: black;
+            background-color: aliceblue;
+            transition: .3s;
+        }
+    </style>
+</head>
+<body>
+    <a href="/">Назад</a>
+    <h1>Знакомьтесь с будущими всеросниками</h1>
+    <p id="loading">загрузка...</p>
+    <table>
+        <tbody id="table">
+
+        </tbody>
+    </table>
+    <script>
+    'use strict';
+      var xhr = new XMLHttpRequest();
+    var url = 'https://yupiyo.ru/json_get';
+    var loadingtxt = document.getElementById("loading");
+    var loads = ["загрузка", "загрузка.", "загрузка..", "загрузка..."];
+    var i = 0;
+    function updateText() {
+      loadingtxt.textContent = loads[i];
+      i++;
+      if (i >= loads.length) {
+        i = 0;
+      }
+    }
+    var intervalId = setInterval(updateText, 500);
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    
+    
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var users = JSON.parse(xhr.responseText);
+          clearInterval(intervalId);
+          
+          var table = document.getElementById('table');
+            for(var user of users.users){
+                var curuserrow = document.createElement('tr');
+                loadingtxt.remove();
+                
+                var curusername = document.createElement('td');
+                curusername.setAttribute('class','name');
+                curusername.textContent = user[0];
+                curuserrow.appendChild(curusername);
+                var curuserstats = document.createElement('td');
+                curuserstats.setAttribute('class','stats');
+                curuserstats.textContent = 'Решено: '+user[2]+'; '+'Ср. Сложность: '+user[3];
+                
+                curuserrow.appendChild(curuserstats);
+                
+                table.appendChild(curuserrow);
+                for(var task of user[1]){
+                    var curusertask = document.createElement('td');
+                    var curusertaskinfo = document.createElement('details');
+                    var curusertaskinfostatus = document.createElement('summary');
+                    var curusertaskinfoname = document.createElement('a');
+                    var curusertaskinfodiff = document.createElement('p');
+                    curusertaskinfoname.textContent = task[3];
+                    curusertaskinfoname.setAttribute('href',task[1]);
+                    if (task[0] == 2) {
+                        curusertask.setAttribute('id','ac');
+                        curusertaskinfostatus.textContent = 'ok';
+                    } else if (task[0] == 1) {
+                        curusertask.setAttribute('id','wa');
+                        curusertaskinfostatus.textContent = 'wa';
+                    } else {
+                        curusertask.setAttribute('id','no');
+                        curusertaskinfostatus.textContent = '?';
+                    }
+                    curusertaskinfo.appendChild(curusertaskinfostatus);
+                    curusertaskinfo.appendChild(curusertaskinfoname);
+                    curusertaskinfodiff.textContent = task[2];
+                    curusertaskinfo.appendChild(curusertaskinfodiff);
+                    
+                    curusertask.appendChild(curusertaskinfo);
+                    curuserrow.appendChild(curusertask);
+                }
+            }
+          // Handle the response data here
+        } else {
+          // Handle the error case
+          console.error('Request failed with status:', xhr.status);
+        }
+      }
+    };
+    
+    xhr.send();
+
+    
+    </script>
+</body>
+</html>
