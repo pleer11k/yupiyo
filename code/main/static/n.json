@@ -6,20 +6,20 @@ using namespace std;
 
 signed main() {
     cin.tie(NULL); cout.tie(NULL); ios::sync_with_stdio(false);
-    string s;cin>>s;
-    vector<int> z(s.size(),0);
+    string s; cin >> s;
+    vector<int> z(s.size(), 0);
     z[0] = s.size();
     int l = 0, r = 0;
-    for(int i = 1; i < s.size(); ++i) {
-        if (i <= r){
-            z[i] = min(z[i-l],r-i+1);
+    for (int i = 1; i < s.size(); ++i) {
+        if (i <= r) {
+            z[i] = min(z[i - l], r - i + 1);
         }
-        while(z[i] + i < s.size() && s[z[i]] == s[z[i]+i]){
+        while (z[i] + i < s.size() && s[z[i]] == s[z[i]+i]) {
             ++z[i];
         }
-        if (z[i]+i >= r){
+        if (z[i] + i >= r) {
             l = i;
-            r = z[i]+i-1;
+            r = z[i] + i - 1;
         }
     }
     return 0;
