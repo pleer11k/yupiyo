@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Topic, Task, Profile
+from .models import Topic, Task, Profile, Chapter
 
 #user: danik
 #pass: Yupiyo123
@@ -7,3 +7,4 @@ from .models import Topic, Task, Profile
 admin.site.register(Topic)
 admin.site.register(Task)
 admin.site.register(Profile)
+admin.site.register(Chapter)

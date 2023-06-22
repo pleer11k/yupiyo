@@ -1,17 +1,33 @@
 from django.shortcuts import render, HttpResponse
 from django.http import JsonResponse
-from .models import Topic, Profile, Task
+from .models import Topic, Profile, Task, Chapter
 import requests, json
 import time
+import datetime
 from bs4 import BeautifulSoup as bs
+
+def present_topic(request, id):
+    q = open(Topic.objects.all()[id].code.path, mode='r', encoding="utf-8")
+    t = []
+    for l in q:
+        print(l)
+        if (l != '\n'): t.append(l)
+        else: t.append(' ')
+    print(t)
+    # return HttpResponse(Topic.objects.all()[id].code)
+    return render(request, 'codik.html', context={"code": t, "name": Topic.objects.all()[id].name})
 
 def main(request):
     data = {}
-    data["topics"] = []
+    data["topics"] = {}
+    for el in Chapter.objects.all():
+        data["topics"][el.name] = []
+    cur = 0
     for el in Topic.objects.all():
         adress = str(el.code.path)
         local = adress.split('main')[1]
-        data["topics"].append([el.name, 'main' + local])
+        data["topics"][el.chapter.all()[0].name].append([el.name, 'main' + local, cur])
+        cur += 1
     return render(request, "main.html", context=data)
     
 def get_tasks():
@@ -38,16 +54,22 @@ def get_tasks():
     json.dump({"problems": raw["problems"]}, open('./main/jsons/problems.json', 'w'))
     return raw["problems"]
 
+
+
 def builder():
+    last_update = json.load(open('./main/jsons/data.json'))["time"]
+    
     data = {}
     data["users"] = []
+    data["users"] = json.load(open('./main/jsons/lists.json'))["users"]
+    if (time.time() - last_update < 300):
+        return data
+    
+    json.dump({"time": time.time()}, open('./main/jsons/data.json', 'w'))
 
     pr = get_tasks()
-    # print(pr)
-    # pr.sort(key=lambda a: a[0])
     ok = 0
     cnt = [0 for i in range(len(pr))]
-    data["users"] = json.load(open('./main/jsons/lists.json'))["users"]
     try:
         if (len(data["users"][0][1]) < len(pr)):
             ok = 1
@@ -61,27 +83,16 @@ def builder():
         for i in range(len(Profile.objects.all())):
             p = Profile.objects.all()[i]
             data["users"].append([p.handle, [[0, f'https://codeforces.com/contest/{pr[j][2]}/problem/{pr[j][3]}', pr[j][0], pr[j][1], j] for j in range(len(pr))]])
-    # for i in range(len(Profile.objects.all())):
-    #     p = Profile.objects.all()[i]
-    #     try:
-    #         if (len(data["users"][i][1]) < len(pr)):
-    #             pass
-    #     except Exception:
-    #         data["users"].append([p.handle, [[0, f'https://codeforces.com/contest/{pr[j][2]}/problem/{pr[j][3]}', pr[j][0], pr[j][1], j] for j in range(len(pr))]])
-    
-    # print(data["users"])
-    # return {}
     profile_num = 0
     for p in Profile.objects.all():
         url = f"https://codeforces.com/api/user.status?handle={p.handle}"
-        time.sleep(0.3)
+        time.sleep(0.5)
         r = requests.get(url)
         raw = json.loads(r.text)
         l = [[0, f"https://codeforces.com/contest/{pr[i][2]}/problem/{pr[i][3]}", pr[i][0], pr[i][1], i] for i in range(len(pr))]
         hist = json.load(open('./main/jsons/sends.json'))
         final_data = json.load(open('./main/jsons/lists.json'))
         try:
-            # print(hist["submissions"][p.handle][0]["id"])
             last_saw = hist["submissions"][p.handle][0]["id"]
         except Exception:
             last_saw = 0
@@ -94,24 +105,19 @@ def builder():
             try:
                 if (el["verdict"] == "OK"):
                     for i in range(len(pr)):
-                        # t = Task.objects.all()[i]
                         if (el["problem"]["contestId"] == pr[i][2] and el["problem"]["index"] == pr[i][3]):
                             data["users"][profile_num][1][i][0] = 2
-                            s += 1
-                            c += pr[i][0]
-                            cnt[i] += 1
-                            pr[i][4] += 1
+                            # s += 1
+                            # c += pr[i][0]
+                            # cnt[i] += 1
+                            # pr[i][4] += 1
                 else:
                     for i in range(len(pr)):
-                        # t = Task.objects.all()[i]
                         if (el["problem"]["contestId"] == pr[i][2] and el["problem"]["index"] == pr[i][3]):
-                            # l[i][0] = max(l[i][0], 1)
                             data["users"][profile_num][1][i][0] = max(data["users"][profile_num][1][i][0], 1)
-                            # data["users"][profile_num][1][i][0] = 1
             except Exception:
                 pass
         
-        # data["users"].append([p.handle, l, s, round(c / max(1, s))])
         profile_num += 1
 
 
@@ -120,7 +126,6 @@ def builder():
         json.dump(hist, open('./main/jsons/sends.json', 'w'))
         json.dump(data, open('./main/jsons/lists.json', 'w'))
 
-    
     data["mod"] = str(data["users"])
     return data
 
