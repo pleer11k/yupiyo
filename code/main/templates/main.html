@@ -6,9 +6,177 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="media/icons/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <!--<link rel="stylesheet" href="{% static 'main.css' %}">-->
     <title>yupiyo</title>
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    color: #f9f9f9;
+}
+
+a {
+    color: #f9f9f9;
+    text-decoration: none;
+}
+
+#algos {
+    transition-duration: 0.25s;
+}
+
+a:hover {
+    color: #ffee00;
+}
+
+h1 {
+    font-size: 52px;
+}
+
+ul {
+    list-style: disc;
+    list-style-type: disc;
+}
+
+li {
+    font-size: 26px;
+    padding-left: 10px;
+}
+
+h3{
+    font-size: 42px;
+    margin-left: 20px;
+}
+
+h3:hover{
+    
+}
+
+h3:hover{
+    cursor: default;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    background-color: #191919c1;
+    border-radius: 15px 15px 15px 15px;
+}
+
+header{
+    display: flex;
+    justify-content: center;
+}
+.algoritmhs{
+    height: 100%;
+}
+
+
+@media (max-width: 700px) {
+    h3{
+        font-size: 32px;
+    }
+    h2{
+        font-size:26px;
+    }
+    .wrap{
+        width: 90px;
+    }
+    .main{
+        width: fit-content;
+    }
+}
+
+@media (min-width: 700px) {
+    .main{
+        width: 50%;
+    }
+}
+
+.algos_header{
+    width:100 %;
+    height: 75px;
+    background-color: #191919c1;
+    display:flex;
+    align-items: center;
+    /*border: 1px red solid;*/
+}
+
+
+.background{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%) rotate(-15deg);
+    z-index: -999;
+    font-size: 0px;
+    white-space: nowrap;
+    background-color: #292929;
+}
+.wrap{
+    white-space: nowrap;
+    display: inline-block;
+    background-size: 85%;
+    background-position: center;
+    background-repeat: repeat-y;
+    width: 150px;
+    height: 1000000px;
+    animation: 1000s linear infinite;
+
+}
+.wrap:nth-child(odd) {
+    animation-name: slideout;
+    background-image: url("https://em-content.zobj.net/thumbs/120/apple/354/green-heart_1f49a.png");
+    /*background-image: url("fiol.jpg");*/
+    /*background-image: url("https://em-content.zobj.net/thumbs/72/apple/354/light-blue-heart_1fa75.png");*/
+}
+.wrap:nth-child(even) {
+    animation-name: slidein;
+    background-image: url("https://em-content.zobj.net/thumbs/120/apple/354/purple-heart_1f49c.png");
+    /*background-image: url("gren.jpg");*/
+    /*background-image: url("https://em-content.zobj.net/thumbs/72/apple/354/blue-heart_1f499.png");*/
+}
+@keyframes slidein {
+    from {
+        transform: translateY(-60000px);
+    }
+    to {
+        transform: translateY(-30000px);
+    }
+}
+@keyframes slideout {
+    from {
+        transform: translateY(-30000px);
+    }
+    to {
+        transform: translateY(-60000px);
+    }
+}
+
+
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Фон скроллбара */
+::-webkit-scrollbar-track {
+  background-color: #292929;
+}
+
+/* Цвет ползунка скроллбара */
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 6px;
+}
+
+
+    </style>
 </head>
 <body>
     <div class="background">
@@ -40,14 +208,20 @@
             <header>
                 <h1><a href="https://youtu.be/rzlYXzL1QWU">Алгоритмы</a></h1>
             </header>
-            <h2 style="width: 100%; text-align: center;"><a href="/tasks/">Лучший ладдер кф ever created</a></h2>
+            <h2 style="width: 100%; text-align: center;"><a href="/table/">Лучший ладдер кф ever created</a></h2>
             <div class="algoritmhs">
-                <ul>
-                    {% for el in topics %}
-                        <li><a id="algos" href="{{el.1}}"><h2>{{el.0}}</h2></a></li>
-                        
+                
+                    {% for k, t in topics.items %}
+                    <div class="algos_header">
+                        <h3 id="algos">{{k}}</h1>
+                    </div>
+                    <ul>
+                        {% for el in t %}
+                        <li><a id="algos" href="topic/{{el.2}}"><h2>{{el.0}}</h2></a></li>
+                        {%endfor%}
+                    </ul>
                     {% endfor %}
-                </ul>
+                
             </div>
         </div>
     </main>

@@ -51,7 +51,7 @@ MIDDLEWARE = [
 ]
 
 STATIC_ROOT = "main/static"
-ROOT_URLCONF = 'yopiyo.urls'
+ROOT_URLCONF = 'yupiyo.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'yopiyo.wsgi.application'
+WSGI_APPLICATION = 'yupiyo.wsgi.application'
 
 
 # Database
